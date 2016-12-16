@@ -12,13 +12,13 @@
             WHERE user_id={$_SESSION["id"]}"
         );
     
-        if ($rows === 0)
+        if (count($rows) === 0)
         {
             apologize("Nothing to sell.");
         }
         
         // else render form
-        render("sell-form.php", ["title" => "Sell"]);
+        render("sell-form.php", ["title" => "Sell", "rows" => $rows]);
     }
 
     // else if user reached page via POST (as by submitting a form via POST)
@@ -31,8 +31,32 @@
         }
         else
         {
-            render("display_stock.php", ["title" => "Quote", "name" => $stock["name"], 
-            "symbol" => $stock["symbol"], "price" => number_format($stock["price"], 2)]);
+            $rows = CS50::query(
+                "SELECT shares
+                FROM portfolios
+                where user_id={$_SESSION["id"]} AND symbol='{$_POST["symbol"]}'"
+            );
+            
+            if (count($rows) !== 1)
+            {
+                apologize("Server Error!! Please Try Later.");
+            }
+            else
+            {
+                $arr = lookup($_POST["symbol"]);
+                $cash_to_add = $arr["price"] * $row[0]["shares"];
+                CS50::query(
+                    "START TRANSACTION;
+                    DELETE FROM portfolios
+                    WHERE user_id = {$_SESSION["id"]} AND symbol = {$_POST["symbol"]};
+                    UPDATE users
+                    SET cash = cash + $cash_to_add
+                    WHERE id = {$_SESSION["id"]};
+                    COMMIT;"
+                );
+                
+                redirect("/");
+            }
         }
     }
 
