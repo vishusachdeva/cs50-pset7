@@ -7,7 +7,7 @@
     if ($_SERVER["REQUEST_METHOD"] == "GET")
     {
         // else render form
-        render("buy-form.php", ["title" => "Get Quote"]);
+        render("buy-form.php", ["title" => "Buy"]);
     }
 
     // else if user reached page via POST (as by submitting a form via POST)
@@ -32,7 +32,7 @@
             {
                 $stock = lookup($_POST["symbol"]);
                 $cash_to_deduct = $stock["price"] * $_POST["shares"];
-                $check = CS50::query("SELECT cash FROM users WHERE id={$_SESSION["id"]});
+                $check = CS50::query("SELECT cash FROM users WHERE id={$_SESSION["id"]}");
                 if ($cash_to_deduct > $check[0]["cash"])
                 {
                     apologize("You cant afford that.");
