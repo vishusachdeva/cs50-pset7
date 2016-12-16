@@ -6,7 +6,8 @@
     $rows = CS50::query(
         "SELECT symbol, shares
         FROM portfolios
-        WHERE user_id={$_SESSION["id"]}"
+        WHERE user_id={$_SESSION["id"]}
+        ORDER BY symbol"
     );
     $cash = CS50::query(
         "SELECT cash

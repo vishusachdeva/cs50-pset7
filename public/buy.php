@@ -31,16 +31,21 @@
             else
             {
                 $stock = lookup($_POST["symbol"]);
+                if ($stock === false)
+                {
+                    apologize("Symbol not found.");
+                }
                 $cash_to_deduct = $stock["price"] * $_POST["shares"];
                 $check = CS50::query("SELECT cash FROM users WHERE id={$_SESSION["id"]}");
+                $symbol = strtoupper($_POST["symbol"]);
                 if ($cash_to_deduct > $check[0]["cash"])
                 {
-                    apologize("You cant afford that.");
+                    apologize("You can't afford that.");
                 }
                 $del_upd = CS50::query(
                     "START TRANSACTION;
                     INSERT INTO portfolios (user_id, symbol, shares)
-                    VALUES({$_SESSION["id"]}, '{$_POST["symbol"]}', {$_POST["shares"]})
+                    VALUES({$_SESSION["id"]}, '{$symbol}', {$_POST["shares"]})
                     ON DUPLICATE KEY UPDATE shares = shares + {$_POST["shares"]};
                     UPDATE users
                     SET cash = cash - {$cash_to_deduct}
