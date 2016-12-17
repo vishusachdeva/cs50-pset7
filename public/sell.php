@@ -45,6 +45,7 @@
             {
                 $stock = lookup($_POST["symbol"]);
                 $cash_to_add = $stock["price"] * $rows[0]["shares"];
+                $time = time();
                 $del_upd = CS50::query(
                     "START TRANSACTION;
                     DELETE FROM portfolios
@@ -52,6 +53,8 @@
                     UPDATE users
                     SET cash = cash + {$cash_to_add}
                     WHERE id = {$_SESSION["id"]};
+                    INSERT INTO history (user_id, transaction, time, symbol, shares, price)
+                    VALUES({$_SESSION["id"]}, 'SELL', '{$time}', '{$_POST["symbol"]}', '{$rows[0]["shares"]}', '{$stock["price"]}');
                     COMMIT;"
                 );
                 if (count($del_upd) !== 1)

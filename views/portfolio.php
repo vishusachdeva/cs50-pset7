@@ -15,7 +15,7 @@
             <td><?= $position["name"] ?></td>
             <td><?= $position["shares"] ?></td>
             <td><?= "$".$position["price"] ?></td>
-            <td><?= "$".$position["total"]?></td>
+            <td><?= "$".$position["total"] ?></td>
         </tr>
     <?php endforeach ?>
         <tr>
