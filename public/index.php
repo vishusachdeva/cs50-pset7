@@ -25,7 +25,7 @@
                 $total = $row["shares"] * $stock["price"];
                 $positions[] = [
                     "name" => $stock["name"],
-                    "price" => $stock["price"],
+                    "price" => number_format($stock["price"], 2),
                     "shares" => $row["shares"],
                     "symbol" => $row["symbol"],
                     "total" => number_format($total, 2)

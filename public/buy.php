@@ -38,7 +38,7 @@
                 $cash_to_deduct = $stock["price"] * $_POST["shares"];
                 $check = CS50::query("SELECT cash FROM users WHERE id={$_SESSION["id"]}");
                 $symbol = strtoupper($_POST["symbol"]);
-                $time = time();
+                $time = date("m/d/y, h:ia");
                 if ($cash_to_deduct > $check[0]["cash"])
                 {
                     apologize("You can't afford that.");
@@ -52,7 +52,7 @@
                     SET cash = cash - {$cash_to_deduct}
                     WHERE id = {$_SESSION["id"]};
                     INSERT INTO history (user_id, transaction, time, symbol, shares, price)
-                    VALUES({$_SESSION["id"]}, 'BUY', '{$time}', '{$_POST["symbol"]}', '{$_POST["shares"]}', '{$stock["price"]}');
+                    VALUES({$_SESSION["id"]}, 'BUY', '{$time}', '{$symbol}', '{$_POST["shares"]}', '{$stock["price"]}');
                     COMMIT;"
                 );
                 if (count($del_upd) !== 1)

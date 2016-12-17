@@ -45,7 +45,7 @@
             {
                 $stock = lookup($_POST["symbol"]);
                 $cash_to_add = $stock["price"] * $rows[0]["shares"];
-                $time = time();
+                $time = date("m/d/y, h:ia");
                 $del_upd = CS50::query(
                     "START TRANSACTION;
                     DELETE FROM portfolios
