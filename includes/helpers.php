@@ -18,7 +18,9 @@
     {
         render("apology.php", ["message" => $message]);
     }
-
+    
+    date_default_timezone_set("Asia/Kolkata"); 
+    
     /**
      * Facilitates debugging by dumping contents of argument(s)
      * to browser.

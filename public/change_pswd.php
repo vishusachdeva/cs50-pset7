@@ -24,14 +24,20 @@
         }
         else
         {
+            // preparing pass key
             $pswd = password_hash($_POST["password"], PASSWORD_DEFAULT);
+            
+            // query to update password
             $row = CS50::query("UPDATE `users` SET `hash`='{$pswd}' WHERE id={$_SESSION["id"]}");
+            
+            // sanity check
             if ($row !== 1)
             {
                 apologize("Server Error!! Please Try Later.");
             }
             else
             {
+                // redirect to index.php
                 redirect("/");
             }
         }

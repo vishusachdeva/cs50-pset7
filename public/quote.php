@@ -16,17 +16,22 @@
         // validate submission
         if (empty($_POST["symbol"]))
         {
+            // if symbol field is empty
             apologize("You must provide a symbol");
         }
         else
         {
+            // looking up for the symbol's current price
             $stock = lookup($_POST["symbol"]);
+            
+            // if that symbol doesn't exist
             if ($stock === false)
             {
                 apologize("Symbol not found.");
             }
             else
             {
+                // render display_stock.php
                 render("display_stock.php", ["title" => "Quote", "name" => $stock["name"], 
                 "symbol" => $stock["symbol"], "price" => number_format($stock["price"], 2)]);
             }

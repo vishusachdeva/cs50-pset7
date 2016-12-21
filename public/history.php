@@ -2,7 +2,8 @@
 
     // configuration
     require("../includes/config.php"); 
-
+    
+    // query for getting rows from history table
     $rows = CS50::query(
         "SELECT *
         FROM history

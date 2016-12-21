@@ -16,21 +16,27 @@
         // validate submission
         if (empty($_POST["deposit"]))
         {
+            // if deposit field is empty
             apologize("You must provide an amount to deposit.");
         }
         else if (is_numeric($_POST["deposit"]) == false)
         {
+            // if deposit field is not valid
             apologize("Deposited amount is not valid.");
         }
         else
         {
+            // query to update user main account cash
             $row = CS50::query("UPDATE `users` SET `cash`=`cash`+'{$_POST["deposit"]}' WHERE id={$_SESSION["id"]}");
+            
+            // sanity check
             if ($row !== 1)
             {
                 apologize("Server Error!! Please Try Later.");
             }
             else
             {
+                // redirect to index.php
                 redirect("/");
             }
         }

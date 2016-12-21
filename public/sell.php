@@ -27,25 +27,35 @@
         // validate submission
         if (empty($_POST["symbol"]))
         {
+            // if symbol field is empty
             apologize("You must select a stock to sell.");
         }
         else
         {
+            // query to select number of shares of the specific symbol
             $rows = CS50::query(
                 "SELECT shares
                 FROM portfolios
                 where user_id={$_SESSION["id"]} AND symbol='{$_POST["symbol"]}'"
             );
             
+            // sanity check
             if (count($rows) !== 1)
             {
                 apologize("Server Error!! Please Try Later.");
             }
             else
             {
+                // looking up for the symbol for the current price
                 $stock = lookup($_POST["symbol"]);
+                
+                // cash to be added to user's main cah balance
                 $cash_to_add = $stock["price"] * $rows[0]["shares"];
+                
+                // creating date object
                 $time = date("m/d/y, h:ia");
+                
+                // query to update portfolio's and user's table
                 $del_upd = CS50::query(
                     "START TRANSACTION;
                     DELETE FROM portfolios
@@ -57,11 +67,14 @@
                     VALUES({$_SESSION["id"]}, 'SELL', '{$time}', '{$_POST["symbol"]}', '{$rows[0]["shares"]}', '{$stock["price"]}');
                     COMMIT;"
                 );
+                
+                // sanity check
                 if (count($del_upd) !== 1)
                 {
                     apologize("Server Error!! Please Try Later.");
                 }
                 
+                // sanity check
                 redirect("/");
             }
         }

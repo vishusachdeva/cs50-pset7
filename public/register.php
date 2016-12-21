@@ -13,7 +13,6 @@
     // else if user reached page via POST (as by submitting a form via POST)
     else if ($_SERVER["REQUEST_METHOD"] == "POST")
     {
-        // TODO
         // validate submission
         if (empty($_POST["username"]))
         {
@@ -25,20 +24,31 @@
         }
         else if ($_POST["password"] != $_POST["confirmation"])
         {
+            // if password field is not same as confirm password field
             apologize("Password field must be same as Confirm Password field.");
         }
         else
         {
-            $row = CS50::query("INSERT IGNORE into `users` (username, hash, cash) VALUES(?, ?, 10000.0000)", $_POST["username"], 
+            // query for inserting a new user in users table
+            $row = CS50::query("INSERT IGNORE into `users`(username, hash, cash)
+            VALUES(?, ?, 10000.0000)", $_POST["username"], 
             password_hash($_POST["password"], PASSWORD_DEFAULT));
+            
+            // sanity check
             if ($row !== 1)
             {
+                // if that username already exist
                 apologize("User with username {$_POST["username"]} already exists.");
             }
             else
             {
+                // query to get id of the current user
                 $rows = CS50::query("SELECT LAST_INSERT_ID() AS id");
+                
+                // starting the session for the current user
                 $_SESSION["id"] = $rows[0]["id"];
+                
+                // redirect user to index.php
                 redirect("/");
             }
         }
